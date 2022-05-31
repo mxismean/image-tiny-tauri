@@ -1,0 +1,23 @@
+{
+  "name": "image-tiny-tauri",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@mxsir/image-tiny": "0.0.4",
+    "@tauri-apps/api": "=1.0.0-beta.8",
+    "jszip": "^3.7.1",
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "=1.0.0-beta.10",
+    "@vitejs/plugin-vue": "^2.2.0",
+    "rollup-plugin-copy": "^3.4.0",
+    "vite": "^2.8.0"
+  }
+}
