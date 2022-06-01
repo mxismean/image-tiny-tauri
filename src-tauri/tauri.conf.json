@@ -28,13 +28,11 @@
       "shortDescription": "",
       "longDescription": "",
       "deb": {
-        "depends": [],
-        "useBootstrapper": false
+        "depends": []
       },
       "macOS": {
         "frameworks": [],
         "minimumSystemVersion": "",
-        "useBootstrapper": false,
         "exceptionDomain": "",
         "signingIdentity": null,
         "entitlements": null
@@ -56,7 +54,7 @@
         "title": "Image Tiny",
         "width": 600,
         "height": 390,
-        "resizable": true,
+        "resizable": false,
         "fullscreen": false,
         "fileDropEnabled": false,
         "center": true,
