@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     vue(),
     copy({
-      targets: [{ src: 'node_modules/@mxsir/image-tiny/dist/pngtiny-custom.wasm', dest: 'dist' }],
+      targets: [{ src: 'node_modules/@mxsir/image-tiny/dist/pngtiny-custom.wasm', dest: 'public' }],
       verbose: true,
       hook: 'writeBundle',
     }),

@@ -70,7 +70,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import JSZip from 'jszip';
 import imageTiny from '@mxsir/image-tiny';
 import { reactive, nextTick } from 'vue';
@@ -78,7 +78,14 @@ import { reactive, nextTick } from 'vue';
 import { writeBinaryFile } from '@tauri-apps/api/fs';
 import { path, dialog, window } from '@tauri-apps/api';
 
-const datas = reactive({
+type Datas = {
+  imgList: Record<string, any>[];
+  tip: string;
+  winTop: string;
+  quality: number;
+};
+
+const datas = reactive<Datas>({
   imgList: [],
   tip: '拖放图片文件到上方区域',
   winTop: '窗口置顶',
@@ -86,8 +93,8 @@ const datas = reactive({
 });
 
 // 设置压缩质量 20-80 %
-function getSelected(e) {
-  const val = e.target.value;
+function getSelected(e: Event) {
+  const val = (e.target as HTMLSelectElement).value;
   datas.quality = Number(val) || 80;
 }
 
@@ -130,7 +137,7 @@ async function handleDownloadAll() {
     let file = new FileReader();
     file.readAsArrayBuffer(content);
     file.onload = function (e) {
-      let fileU8A = new Uint8Array(e.target.result);
+      let fileU8A = new Uint8Array(e.target!.result as ArrayBufferLike);
       writeBinaryFile({ contents: fileU8A, path: `${selPath}IMG_${mon + day + hour + min}.zip` });
       datas.tip = 'zip 保存成功';
     };
@@ -138,7 +145,7 @@ async function handleDownloadAll() {
 }
 
 // 保存单个图片
-async function handleSaveFile(file) {
+async function handleSaveFile(file: Record<string, any>) {
   datas.tip = '图片保存中...';
   const basePath = await path.downloadDir();
   let selPath = await dialog.save({
@@ -150,7 +157,7 @@ async function handleSaveFile(file) {
 
   reader.readAsArrayBuffer(file.data);
   reader.onload = function (e) {
-    let fileU8A = new Uint8Array(e.target.result);
+    let fileU8A = new Uint8Array(e.target!.result as ArrayBufferLike);
     writeBinaryFile({ contents: fileU8A, path: `${selPath}${file.data.name}` });
     datas.tip = '图片保存成功';
   };
@@ -164,30 +171,30 @@ function handleClearList() {
 }
 
 // 格式化文件尺寸
-function getSizeTrans(fs) {
+function getSizeTrans(fs: number): string {
   if (fs < 1024) {
-    return fs;
+    return String(fs);
   } else if (fs < 1024 * 1024) {
-    return parseInt((fs * 10) / 1024) / 10 + 'K';
+    return parseInt(String((fs * 10) / 1024)) / 10 + 'K';
   } else if (fs < 1024 * 1024 * 1024) {
-    return parseInt((fs * 10) / 1024 / 1024) / 10 + 'M';
+    return parseInt(String((fs * 10) / 1024 / 1024)) / 10 + 'M';
   } else {
-    return parseInt((fs * 10) / 1024 / 1024 / 1024) / 10 + 'G';
+    return parseInt(String((fs * 10) / 1024 / 1024 / 1024)) / 10 + 'G';
   }
 }
 
 // 预处理上传的图片文件
-async function displayChsFile(files) {
+async function displayChsFile(files: FileList) {
   let liNum = datas.imgList.length;
-  const imgFiles = [];
-  const showImgs = [];
+  const imgFiles: File[] = [];
+  const showImgs: Record<string, any>[] = [];
   for (let i = 0; i < files.length; i++) {
     const file = files.item(i);
-    if (file.type.includes('image')) {
-      imgFiles.push(file);
+    if (file!.type.includes('image')) {
+      imgFiles.push(file as File);
       const showFile = {
-        name: file.name,
-        before: getSizeTrans(file.size),
+        name: file!.name,
+        before: getSizeTrans(file!.size),
         data: null,
         status: '压缩中...',
         after: null,
@@ -198,7 +205,7 @@ async function displayChsFile(files) {
     }
   }
 
-  datas.imgList = datas.imgList.concat(showImgs);
+  datas.imgList = [...datas.imgList, ...showImgs];
 
   await nextTick();
 
@@ -211,7 +218,7 @@ async function displayChsFile(files) {
 }
 
 // 图片文件压缩处理
-async function uploadFile(file, ufid) {
+async function uploadFile(file: File, ufid: number) {
   let tinyFile = await imageTiny(file, datas.quality);
   const rate = ((((file.size - tinyFile.size) * 100) / file.size) | 0) + '%';
   const imgInfo = {
@@ -227,22 +234,22 @@ async function uploadFile(file, ufid) {
   await nextTick();
 }
 
-function dragenterEvent(event) {
+function dragenterEvent(event: Event) {
   event.stopPropagation();
   event.preventDefault();
 }
-function dragoverEvent(event) {
+function dragoverEvent(event: Event) {
   event.stopPropagation();
   event.preventDefault();
 }
-function dragleaveEvent(event) {
+function dragleaveEvent(event: Event) {
   event.stopPropagation();
   event.preventDefault();
 }
-function dropEvent(event) {
+function dropEvent(event: DragEvent) {
   event.stopPropagation();
   event.preventDefault();
-  const files = event.dataTransfer.files;
+  const files = event.dataTransfer!.files;
   displayChsFile(files);
 }
 </script>
@@ -258,6 +265,8 @@ function dropEvent(event) {
   -webkit-overflow-scrolling: auto;
   width: 100%;
   height: 100%;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .sucess {

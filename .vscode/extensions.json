@@ -1,5 +1,3 @@
 {
-  "recommendations": [
-    "github.copilot"
-  ]
+  "recommendations": ["Vue.volar"]
 }
