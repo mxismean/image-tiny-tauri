@@ -9,11 +9,17 @@
 
 ## Released
 
+## [0.2.1] - 2022-08-10
+
+### Fixed
+
+- 默认运行 app 名称修改 @mxismean
+
 ## [0.2.0] - 2022-08-10
 
 ### Added
 
-- 添加 gitaction 自动构建 @mxismean
+- 添加 github action 自动构建 @mxismean
 
 ## [0.1.0] - 2022-08-09
 
