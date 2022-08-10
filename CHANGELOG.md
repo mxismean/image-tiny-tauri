@@ -9,6 +9,12 @@
 
 ## Released
 
+## [0.2.0] - 2022-08-10
+
+### Added
+
+- 添加 gitaction 自动构建 @mxismean
+
 ## [0.1.0] - 2022-08-09
 
 ### Changed
