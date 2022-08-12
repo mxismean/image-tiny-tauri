@@ -1,5 +1,9 @@
 <template>
   <div class="main">
+    <div class="title" data-tauri-drag-region>
+      <p @click="handleClose">x</p>
+      <p @click="handleMin">-</p>
+    </div>
     <!-- 头部 -->
     <div class="header">
       <div class="cell-name">名称</div>
@@ -77,6 +81,7 @@ import { reactive, nextTick } from 'vue';
 // import { listen } from '@tauri-apps/api/event';
 import { writeBinaryFile } from '@tauri-apps/api/fs';
 import { path, dialog, window } from '@tauri-apps/api';
+import { appWindow } from '@tauri-apps/api/window';
 
 type Datas = {
   imgList: Record<string, any>[];
@@ -91,6 +96,14 @@ const datas = reactive<Datas>({
   winTop: '窗口置顶',
   quality: 80,
 });
+
+function handleClose() {
+  appWindow.close();
+}
+
+function handleMin() {
+  appWindow.minimize();
+}
 
 // 设置压缩质量 20-80 %
 function getSelected(e: Event) {
@@ -262,11 +275,13 @@ function dropEvent(event: DragEvent) {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  -webkit-overflow-scrolling: auto;
+  /* -webkit-overflow-scrolling: auto; */
   width: 100%;
   height: 100%;
   padding: 0 !important;
   margin: 0 !important;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .sucess {
@@ -300,9 +315,37 @@ function dropEvent(event: DragEvent) {
   animation: loadding 600ms ease-in;
 }
 
+.title {
+  width: 100%;
+  height: 20px;
+  background: rgba(34, 41, 50, 0.9);
+  display: flex;
+  align-items: center;
+}
+
+.title > p {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 15px;
+  margin: 0 5px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.title > p:first-child {
+  background: red;
+}
+
+.title > p:last-child {
+  background: green;
+}
+
 .footer {
   width: 100%;
-  height: 50px;
+  height: 35px;
   padding: 0;
   background: rgba(62, 75, 90, 0.8);
   display: flex;
@@ -345,22 +388,22 @@ function dropEvent(event: DragEvent) {
   margin: 0 5px;
   line-height: 14px;
   color: #fff;
-  border: 1px solid #fff;
+  border: 0.5px solid #fff;
   text-align: center;
   padding-left: 4px;
 }
 
 .action-btn {
   cursor: pointer;
-  border: 1px solid #fff;
+  border: 0.5px solid #fff;
   color: #fff;
   display: block;
   width: 50px;
   height: 24px;
-  border-radius: 6px;
+  border-radius: 12px;
   text-align: center;
   line-height: 22px;
-  margin: 0 10px;
+  margin: 0 6px;
   position: relative;
   font-size: 10px;
 }
@@ -446,12 +489,13 @@ function dropEvent(event: DragEvent) {
   color: #fff;
   padding: 10px;
   width: 100%;
-  height: 40px;
+  height: 30px;
   font-size: 14px;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* -webkit-app-region: drap; */
 }
 
 .image-list {

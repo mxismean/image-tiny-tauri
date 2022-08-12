@@ -72,7 +72,8 @@
         "title": "image-tiny",
         "resizable": false,
         "fileDropEnabled": false,
-        "transparent": true
+        "transparent": true,
+        "decorations": false
       }
     ]
   }
