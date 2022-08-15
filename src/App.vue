@@ -108,7 +108,7 @@ function handleMin() {
   appWindow.minimize();
 }
 function handleMax() {
-  appWindow.maximize();
+  // appWindow.maximize();
 }
 
 // 设置压缩质量 20-80 %
@@ -360,7 +360,8 @@ function dropEvent(event: DragEvent) {
 }
 
 .title-left > p:last-child {
-  background-color: #28c840;
+  /* background-color: #28c840; */
+  background-color: #494c4e;
 }
 
 .title-left:hover > p:first-child {
@@ -371,9 +372,9 @@ function dropEvent(event: DragEvent) {
   background-image: url('./assets/image/btn-min.png');
 }
 
-.title-left:hover > p:last-child {
+/* .title-left:hover > p:last-child {
   background-image: url('./assets/image/btn-max.png');
-}
+} */
 
 .footer {
   width: 100%;
