@@ -1,8 +1,11 @@
 <template>
   <div class="main">
     <div class="title" data-tauri-drag-region>
-      <p @click="handleClose">x</p>
-      <p @click="handleMin">-</p>
+      <div class="title-left">
+        <p @click="handleClose"></p>
+        <p @click="handleMin"></p>
+        <p @click="handleMax"></p>
+      </div>
     </div>
     <!-- 头部 -->
     <div class="header">
@@ -103,6 +106,9 @@ function handleClose() {
 
 function handleMin() {
   appWindow.minimize();
+}
+function handleMax() {
+  appWindow.maximize();
 }
 
 // 设置压缩质量 20-80 %
@@ -321,26 +327,52 @@ function dropEvent(event: DragEvent) {
   background: rgba(34, 41, 50, 0.9);
   display: flex;
   align-items: center;
+  padding: 0 4px;
 }
 
-.title > p {
-  width: 15px;
-  height: 15px;
+.title-left {
+  width: 60px;
+  height: 12px;
+  display: flex;
+}
+
+.title-left > p {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   text-align: center;
   line-height: 15px;
-  margin: 0 5px;
+  margin: 0 4px;
   color: #fff;
   font-weight: bold;
   font-size: 14px;
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.title > p:first-child {
-  background: red;
+.title-left > p:first-child {
+  background-color: #ff5f57;
 }
 
-.title > p:last-child {
-  background: green;
+.title-left > p:nth-child(2) {
+  background-color: #febc2e;
+}
+
+.title-left > p:last-child {
+  background-color: #28c840;
+}
+
+.title-left:hover > p:first-child {
+  background-image: url('./assets/image/btn-close.png');
+}
+
+.title-left:hover > p:nth-child(2) {
+  background-image: url('./assets/image/btn-min.png');
+}
+
+.title-left:hover > p:last-child {
+  background-image: url('./assets/image/btn-max.png');
 }
 
 .footer {
