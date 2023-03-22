@@ -9,6 +9,17 @@
 
 ## Released
 
+## [0.2.3] - 2023-03-22
+
+### Fixed
+
+- 修复拖拽图片在应用底部操作栏释放后会错误打开文件的 bug @mxismean
+
+### Added
+
+- 项目ui优化 @mxismean
+- 部署脚本优化 @mxismean
+
 ## [0.2.2] - 2022-08-10
 
 ### Added

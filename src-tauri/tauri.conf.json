@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "image-tiny",
-    "version": "0.2.2"
+    "version": "0.2.3"
   },
   "tauri": {
     "allowlist": {
@@ -67,8 +67,8 @@
     "windows": [
       {
         "fullscreen": false,
-        "width": 580,
-        "height": 420,
+        "width": 520,
+        "height": 380,
         "title": "image-tiny",
         "resizable": false,
         "fileDropEnabled": false,

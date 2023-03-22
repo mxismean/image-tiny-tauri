@@ -1,5 +1,11 @@
 <template>
-  <div class="main">
+  <div
+    class="main"
+    @dragenter="dragenterEvent"
+    @dragover="dragoverEvent"
+    @dragleave="dragleaveEvent"
+    @drop="dropEvent"
+  >
     <!-- 头部 -->
     <div class="header">
       <div class="cell-name">名称</div>
@@ -10,13 +16,7 @@
       <div class="cell-down">操作</div>
     </div>
     <!-- 内容区 -->
-    <div
-      class="middle-con"
-      @dragenter="dragenterEvent"
-      @dragover="dragoverEvent"
-      @dragleave="dragleaveEvent"
-      @drop="dropEvent"
-    >
+    <div class="middle-con">
       <div v-if="datas.imgList.length === 0" class="drop-tip">拖 放 图 片</div>
       <div v-else class="image-items">
         <ul>
@@ -73,10 +73,12 @@
 <script setup lang="ts">
 import JSZip from 'jszip';
 import imageTiny from '@mxsir/image-tiny';
-import { reactive, nextTick } from 'vue';
+import { reactive, nextTick, onMounted } from 'vue';
 // import { listen } from '@tauri-apps/api/event';
 import { writeBinaryFile } from '@tauri-apps/api/fs';
-import { path, dialog, window } from '@tauri-apps/api';
+import { downloadDir } from '@tauri-apps/api/path';
+import { save } from '@tauri-apps/api/dialog';
+import { appWindow, getCurrent } from '@tauri-apps/api/window';
 
 type Datas = {
   imgList: Record<string, any>[];
@@ -100,12 +102,11 @@ function getSelected(e: Event) {
 
 // 窗口置顶
 function handleWindowTop() {
-  let curWin = window.getCurrent();
   if (datas.winTop === '窗口置顶') {
-    curWin.setAlwaysOnTop(true);
+    getCurrent().setAlwaysOnTop(true);
     datas.winTop = '取消置顶';
   } else {
-    curWin.setAlwaysOnTop(false);
+    getCurrent().setAlwaysOnTop(false);
     datas.winTop = '窗口置顶';
   }
 }
@@ -127,11 +128,11 @@ async function handleDownloadAll() {
   const hour = date.getHours() + '_';
   const min = date.getMinutes();
 
-  const basePath = await path.downloadDir();
-  let selPath = await dialog.save({
+  const basePath = await downloadDir();
+  let selPath = await save({
     defaultPath: basePath,
   });
-  selPath = selPath.replace(/Untitled$/, '');
+  selPath = selPath!.replace(/Untitled$/, '');
 
   zip.generateAsync({ type: 'blob' }).then((content) => {
     let file = new FileReader();
@@ -147,11 +148,11 @@ async function handleDownloadAll() {
 // 保存单个图片
 async function handleSaveFile(file: Record<string, any>) {
   datas.tip = '图片保存中...';
-  const basePath = await path.downloadDir();
-  let selPath = await dialog.save({
+  const basePath = await downloadDir();
+  let selPath = await save({
     defaultPath: basePath,
   });
-  selPath = selPath.replace(/Untitled$/, '');
+  selPath = selPath!.replace(/Untitled$/, '');
 
   const reader = new FileReader();
 
@@ -238,7 +239,7 @@ function dragenterEvent(event: Event) {
   event.stopPropagation();
   event.preventDefault();
 }
-function dragoverEvent(event: Event) {
+async function dragoverEvent(event: Event) {
   event.stopPropagation();
   event.preventDefault();
 }
@@ -267,6 +268,7 @@ function dropEvent(event: DragEvent) {
   height: 100%;
   padding: 0 !important;
   margin: 0 !important;
+  zoom: 0.8;
 }
 
 .sucess {
@@ -302,7 +304,7 @@ function dropEvent(event: DragEvent) {
 
 .footer {
   width: 100%;
-  height: 50px;
+  height: 40px;
   padding: 0;
   background: rgba(62, 75, 90, 0.8);
   display: flex;
@@ -345,28 +347,28 @@ function dropEvent(event: DragEvent) {
   margin: 0 5px;
   line-height: 14px;
   color: #fff;
-  border: 1px solid #fff;
+  border: 0.5px dotted #fff;
   text-align: center;
   padding-left: 4px;
 }
 
 .action-btn {
   cursor: pointer;
-  border: 1px solid #fff;
+  border: 0.5px solid #fff;
   color: #fff;
   display: block;
-  width: 50px;
   height: 24px;
   border-radius: 6px;
   text-align: center;
-  line-height: 22px;
+  line-height: 24px;
   margin: 0 10px;
   position: relative;
   font-size: 10px;
+  padding: 0 5px;
 }
 .action-btn:hover {
   color: #80b9ea;
-  border: 1px solid #80b9ea;
+  border: 0.5px solid #80b9ea;
 }
 
 .action-btn-add {
@@ -380,18 +382,6 @@ function dropEvent(event: DragEvent) {
 .action-btn-add-tip {
   color: #fff;
   padding: 0 10px;
-}
-
-.action-btn-sel {
-  cursor: pointer;
-  width: 40px;
-  height: 24px;
-  border-radius: 6px;
-  border: 1px solid #fff;
-  color: #fff;
-  font-size: 24px;
-  position: absolute;
-  z-index: 1;
 }
 
 .action-btn-ipt {
@@ -446,7 +436,7 @@ function dropEvent(event: DragEvent) {
   color: #fff;
   padding: 10px;
   width: 100%;
-  height: 40px;
+  height: 30px;
   font-size: 14px;
   font-weight: bold;
   display: flex;
@@ -468,7 +458,7 @@ function dropEvent(event: DragEvent) {
   border-radius: 4px;
 }
 .image-items li:nth-child(even) {
-  background: rgba(252, 252, 250, 1);
+  background: rgb(207, 225, 233);
 }
 
 .cell-name {
